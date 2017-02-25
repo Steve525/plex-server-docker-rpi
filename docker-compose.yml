@@ -4,18 +4,21 @@ plex:
   image: greensheep/plex-server-docker-rpi:0.9.16.6
   net: "host"
   ports:
-   - 32400:32400
-  restart: always
+   - 32400:32400/tcp
+   - 3005:3005/tcp
+   - 8324:8324/tcp
+   - 32469:32469/tcp
+   - 1900:1900/udp
+   - 32410:32410/udp
+   - 32412:32412/udp
+   - 32413:32413/udp
+   - 32414:32414/udp
+  restart: unless-stopped
+  environment:
+    - TZ=America/Boise
+    - PLEX_CLAIM=claim-MqpWJhtkvUBSDykPWyGK
+    - ADVERTISE_IP=http://45.56.55.146:32400/
   volumes:
-   - /home/pi/plex/config:/config
-   - /home/pi/plex/data:/data
+   - /home/pirate/plex/config:/config
+   - /home/pirate/plex/data:/data
 
-# Share plex data volume as Samba share
-samba-server:
-  command: plex-data:/data
-  container_name: samba-server
-  image: greensheep/samba-server:0.1.0
-  net: "host"
-  restart: always
-  volumes_from:
-   - plex
